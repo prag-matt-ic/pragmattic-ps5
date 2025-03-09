@@ -17,3 +17,21 @@ body {
   color: var(--color-white);
   font-family: var(--font-sans);
 }
+
+/* :root {
+  --gobal-ui-rotation: rotate3d(0, 0, 1, 20deg);
+}
+
+.ui-rotate {
+ transform: var(--gobal-ui-rotation);
+}  */
+
+:root {
+  --ui-azimuth: 0deg;
+  --ui-polar: 0deg;
+}
+
+.ui-rotate {
+  /* Note: The order of rotation functions matters */
+  transform: rotateY(var(--ui-azimuth)) rotateX(var(--ui-polar));
+}

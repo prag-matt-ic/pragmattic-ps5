@@ -9,7 +9,7 @@ import { type WebGPURendererParameters } from 'three/src/renderers/webgpu/WebGPU
 import * as THREE from 'three/webgpu'
 
 import PS5Backdrop from '@/components/Backdrop'
-import PS5CameraControls from '@/components/CameraControls'
+import CameraControls from '@/components/CameraControls'
 import PS5Lighting from '@/components/Lighting'
 import PS5Particles from '@/components/Particles'
 
@@ -61,7 +61,7 @@ const PS5LoadingScene: FC = () => {
       <PS5Particles />
       <PS5Lighting />
       {/* <OrbitControls /> */}
-      <PS5CameraControls />
+      <CameraControls />
       {/* {process.env.NODE_ENV === 'development' && <Stats />} */}
     </Canvas>
   )

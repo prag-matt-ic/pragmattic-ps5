@@ -26,23 +26,27 @@ const UI: FC = () => {
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
-    <SwitchTransition mode="in-out">
-      <Transition
-        key={stage}
-        timeout={{ enter: 0, exit: 800 }}
-        nodeRef={wrapper}
-        mountOnEnter={true}
-        unmountOnExit={true}>
-        {(transitionStatus) => {
-          return (
-            <div ref={wrapper} className="fixed inset-0 flex items-center justify-center">
-              {stage === Stage.BRAND && <PulsingBrand transitionStatus={transitionStatus} />}
-              {stage === Stage.AVATAR && <Avatars transitionStatus={transitionStatus} />}
-            </div>
-          )
-        }}
-      </Transition>
-    </SwitchTransition>
+    <div className="fixed inset-0 perspective-normal">
+      <SwitchTransition mode="in-out">
+        <Transition
+          key={stage}
+          timeout={{ enter: 0, exit: 800 }}
+          nodeRef={wrapper}
+          mountOnEnter={true}
+          unmountOnExit={true}>
+          {(transitionStatus) => {
+            return (
+              <div
+                ref={wrapper}
+                className="ui-rotate absolute inset-0 flex items-center justify-center transform-3d *:transform-3d">
+                {stage === Stage.BRAND && <PulsingBrand transitionStatus={transitionStatus} />}
+                {stage === Stage.AVATAR && <Avatars transitionStatus={transitionStatus} />}
+              </div>
+            )
+          }}
+        </Transition>
+      </SwitchTransition>
+    </div>
   )
 }
 
