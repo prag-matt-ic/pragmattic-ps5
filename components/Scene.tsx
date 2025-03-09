@@ -62,7 +62,7 @@ const PS5LoadingScene: FC = () => {
       <PS5Lighting />
       {/* <OrbitControls /> */}
       <PS5CameraControls />
-      {/* {process.env.NODE_ENV === 'development' && <Stats />} */}
+      {process.env.NODE_ENV === 'development' && <Stats />}
     </Canvas>
   )
 }

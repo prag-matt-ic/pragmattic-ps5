@@ -7,20 +7,19 @@ const PS5Backdrop: FC = () => {
   const viewport = useThree((s) => s.viewport)
 
   const { colorNode } = useMemo(() => {
-    const lightColor = color('#12141F')
-    // const lightColor = color("red");
-    const darkColor = color('#090A12')
-    const colorNode = mix(lightColor, darkColor, uv().y)
+    const topColour = color('#12141F')
+    const bottomColour = color('#090A12')
+    const colorNode = mix(topColour, bottomColour, uv().y)
     return { colorNode }
   }, [])
 
   return (
     <Backdrop
       floor={0.3} // Stretches the floor segment, 0.25 by default
-      segments={20} // Mesh-resolution, 20 by default
-      receiveShadow={true}
-      scale={[110, 40, 8]}
-      position={[0, -viewport.height / 3, -1]}>
+      segments={18} // Mesh-resolution, 20 by default
+      receiveShadow={false}
+      scale={[160, 52, 16]}
+      position={[0, -viewport.height / 3, -5]}>
       <meshStandardNodeMaterial colorNode={colorNode} />
     </Backdrop>
   )

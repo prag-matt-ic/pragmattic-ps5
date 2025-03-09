@@ -110,7 +110,7 @@ const PS5Particles: FC = () => {
         .add(noiseB.mul(2))
       const wavePos = vec3(x, y, z).toVar()
 
-      const shouldOffsetY = seed.lessThan(0.33)
+      const shouldOffsetY = seed.lessThan(0.35)
       const offsetPos = vec3(0.0, noiseA.sub(noiseB).mul(24), 0.0).add(wavePos)
       const finalPos = select(shouldOffsetY, offsetPos, wavePos).toVar()
 
@@ -141,7 +141,7 @@ const PS5Particles: FC = () => {
     const positionNode = currentPositionBuffer.toAttribute()
 
     const colorNode = Fn(() => {
-      const centeredUv = uv().distance(vec2(0.5)).toVar()
+      const centeredUv = uv().distance(vec2(0.5))
       const posZ = positionWorld.z
       // Mimic a "bokeh" effect by creating soft circles near and far from the camera
       const softness = select(
@@ -170,24 +170,28 @@ const PS5Particles: FC = () => {
       const flickerAlpha = flickerIn.mul(flickerOut)
 
       // Fade in as entering
-      const enterOpacity = clamp(uEnterValue, 0.3, 1.0)
+      const enterOpacity = clamp(uEnterValue, 0.4, 1.0)
 
       // Fade particles out near and far from the camera
       const posZ = positionWorld.z
-      const distance = select(
-        posZ.lessThan(-1.0),
-        smoothstep(-zRange / 2, -1.0, posZ).oneMinus(),
-        select(posZ.greaterThan(2.0), smoothstep(2.0, zRange / 2, posZ), 0.0),
-      )
-      const fadeOutDistance = distance.oneMinus()
+      const distanceOpacity = select(
+        posZ.lessThan(0.0),
+        smoothstep(-zRange / 2, 0.0, posZ).oneMinus(),
+        select(posZ.greaterThan(1.0), smoothstep(1.0, zRange / 2, posZ), 0.0),
+      ).oneMinus()
 
-      const finalOpacity = flickerAlpha.mul(enterOpacity).mul(fadeOutDistance)
+      const finalOpacity = flickerAlpha.mul(enterOpacity).mul(distanceOpacity)
+
       return finalOpacity
     })()
 
     const scaleNode = Fn(() => {
       const seed = seedBuffer.element(instanceIndex)
-      const scale = select(seed.greaterThan(0.99), vec2(3), vec2(mix(0.4, 2.0, seed)))
+      const scale = select(
+        seed.greaterThan(0.98),
+        vec2(3.2),
+        select(seed.lessThan(0.05), vec2(1.0), vec2(mix(0.3, 2.5, seed))),
+      )
       return scale
     })()
 
@@ -270,8 +274,8 @@ const PS5Particles: FC = () => {
     <instancedMesh
       args={[undefined, undefined, particleCount]}
       frustumCulled={false}
-      position={[0, -1.5, 0]}
-      rotation={[0, 0.2, Math.PI / 12]}>
+      position={[0, -1.8, 0]}
+      rotation={[0, 0.22, Math.PI / 12]}>
       <planeGeometry args={[0.1, 0.1]} />
       <spriteNodeMaterial
         key={key}
@@ -279,7 +283,7 @@ const PS5Particles: FC = () => {
         colorNode={colorNode}
         scaleNode={scaleNode}
         opacityNode={opacityNode}
-        // blending={AdditiveBlending}
+        blending={AdditiveBlending}
         depthWrite={false}
         transparent={true}
       />
