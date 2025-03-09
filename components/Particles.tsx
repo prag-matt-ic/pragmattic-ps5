@@ -160,9 +160,9 @@ const PS5Particles: FC = () => {
 
     // Nodes for sprite node material
     const positionNode = Fn(() => {
-      // const initialPosition = initialPositionBuffer.element(instanceIndex);
-      // const finalPosition = finalPositionBuffer.element(instanceIndex);
+      // @ts-expect-error no type for this
       const finalPosition = finalPositionBuffer.toAttribute()
+      // @ts-expect-error no type for this
       const initialPosition = initialPositionBuffer.toAttribute()
       const position = mix(initialPosition, finalPosition, uEnterValue)
       return position
