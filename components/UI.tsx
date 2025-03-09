@@ -28,12 +28,7 @@ const UI: FC = () => {
 
   return (
     <SwitchTransition mode="in-out">
-      <Transition
-        key={stage}
-        timeout={{ enter: 0, exit: 800 }}
-        nodeRef={wrapper}
-        mountOnEnter={true}
-        unmountOnExit={true}>
+      <Transition key={stage} timeout={{ enter: 0, exit: 800 }} nodeRef={wrapper}>
         {(transitionStatus) => {
           return (
             <div ref={wrapper} className="fixed inset-0 flex items-center justify-center">
@@ -151,7 +146,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' },
           )
           // // then bring the avatar image in
-          .to('#avatar-img', { opacity: 1, duration: 0.4, ease: 'power2.in' }, 0.4)
+          .to('#avatar-img', { opacity: 1, duration: 0.4, ease: 'power2.in' }, 0.6)
           // followed by the secondary column
           .fromTo(
             '#see',
@@ -163,7 +158,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
               duration: 0.25,
               ease: 'power1.in',
             },
-            '-=0.15',
+            '-=0.1',
           )
           // Then we animate the H1 characters in
           .fromTo(
@@ -275,7 +270,6 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             id="avatar-img"
             alt="Matthew Frawley"
             className="rounded-full opacity-0"
-            quality={80}
             priority={true}
           />
         </div>
