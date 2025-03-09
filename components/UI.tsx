@@ -237,11 +237,11 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
       ref={container}
       className="absolute grid h-full grid-cols-3 grid-rows-3 place-content-center gap-x-6 gap-y-3">
       <header className="col-span-3 flex flex-col items-center justify-center gap-4 text-center">
-        <h1 className="text-4xl font-medium tracking-tight">PS5 Landing Experience</h1>
+        <h1 className="text-4xl font-medium tracking-tight">PS5 Landing Experience with WebGPU</h1>
         <p id="about" className="max-w-xl leading-relaxed font-light text-white/80">
-          This project was inspired by the PS5 loading screen, and is built using React (Next.js), Three.js (R3F), GSAP
-          and TailwindCSS. All of the shader/GPU logic is written entirely in Typescript using Three.js Shading
-          Language.
+          This project was inspired by the PS5 loading screen, and is built with Next.js, Three.js (R3F), GSAP and
+          TailwindCSS. All of the shader/GPU logic for the particles is written entirely in Typescript using Three.js
+          Shading Language.
         </p>
       </header>
 
@@ -285,7 +285,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             <button
               ref={refs.setReference}
               {...getReferenceProps()}
-              className="group mx-auto flex cursor-pointer items-center gap-2 select-none">
+              className="group mx-auto flex cursor-pointer items-center gap-2 p-1 select-none">
               <Image src={optionsIcon} alt="options" className="h-5 w-fit" />
               <span className="text-left text-sm font-light text-white/80 group-hover:text-white">Options</span>
             </button>
