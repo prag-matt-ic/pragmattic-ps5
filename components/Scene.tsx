@@ -1,7 +1,7 @@
 'use client'
 import { useGSAP } from '@gsap/react'
 import { OrbitControls, Stats } from '@react-three/drei'
-import { Canvas, extend } from '@react-three/fiber'
+import { Canvas, extend, type ThreeToJSXElements } from '@react-three/fiber'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/dist/SplitText'
 import { type FC, useLayoutEffect, useState } from 'react'
@@ -14,6 +14,7 @@ import PS5Lighting from '@/components/Lighting'
 import PS5Particles from '@/components/Particles'
 
 declare module '@react-three/fiber' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface ThreeElements extends ThreeToJSXElements<typeof THREE> {}
 }
 
@@ -56,13 +57,11 @@ const PS5LoadingScene: FC = () => {
       }}>
       <color attach="background" args={['#000210']} />
       <ambientLight intensity={6} />
-
       <PS5Backdrop />
       <PS5Particles />
       <PS5Lighting />
       {/* <OrbitControls /> */}
       <PS5CameraControls />
-
       {/* {process.env.NODE_ENV === 'development' && <Stats />} */}
     </Canvas>
   )
