@@ -3,7 +3,7 @@ import { offset, useClick, useDismiss, useFloating, useInteractions } from '@flo
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import SplitText from 'gsap/dist/SplitText'
-import Image, { StaticImageData } from 'next/image'
+import Image, { type StaticImageData } from 'next/image'
 import React, { type FC, useRef, useState } from 'react'
 import { SwitchTransition, Transition, TransitionStatus } from 'react-transition-group'
 
@@ -12,13 +12,14 @@ import avatarImg from '@/assets/avatar.jpg'
 import optionsIcon from '@/assets/options.svg'
 import brandIcon from '@/assets/p-brand.svg'
 import restartIcon from '@/assets/restart.svg'
-import blogIcon from '@/assets/socials/article.svg'
+// import blogIcon from '@/assets/socials/article.svg'
 import instagramIcon from '@/assets/socials/instagram.svg'
 import linkedinIcon from '@/assets/socials/linkedin.svg'
 import mailIcon from '@/assets/socials/mail.svg'
 import youtubeIcon from '@/assets/socials/youtube.svg'
 import usePS5Store, { Stage } from '@/hooks/usePS5Store'
 
+// Register plugins
 gsap.registerPlugin(useGSAP, SplitText)
 
 const UI: FC = () => {
@@ -116,7 +117,7 @@ const PulsingBrand: FC<Props> = ({ transitionStatus }) => {
       ))}
       <button
         id="brand-button"
-        className="relative flex cursor-pointer items-center justify-center transition-transform duration-300 ease-in-out hover:scale-125"
+        className="relative flex cursor-pointer items-center justify-center transition-transform duration-300 ease-in-out hover:scale-120"
         aria-label="Press to start"
         onClick={() => setStage(Stage.AVATAR)}>
         <Image src={brandIcon} alt="Pragmattic" className="size-24" />
@@ -186,8 +187,8 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             },
             {
               opacity: 1,
-              duration: 1,
-              ease: 'power2.out',
+              duration: 1.4,
+              ease: 'power1.out',
             },
           )
       }
@@ -304,10 +305,10 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
                 style={floatingStyles}
                 {...getFloatingProps()}
                 id="contact-menu"
-                className="fixed z-50 flex flex-wrap gap-4 rounded-lg bg-white p-4 opacity-0 shadow-2xl">
+                className="bg-darkblue/80 fixed z-50 flex flex-wrap gap-4 rounded-lg p-4 opacity-0">
                 {SOCIALS.map((social, index) => (
-                  <a key={index} href={social.href} target="_blank" rel="noopener noreferrer p-1">
-                    <Image src={social.icon} alt={social.alt} className="size-10" />
+                  <a key={index} href={social.href} target="_blank" rel="noopener noreferrer p-2">
+                    <Image src={social.icon} alt={social.alt} className="size-8" />
                   </a>
                 ))}
               </div>
@@ -331,10 +332,10 @@ const SOCIALS: {
   href: string
 }[] = [
   { icon: linkedinIcon, alt: 'LinkedIn', href: 'https://www.linkedin.com/in/matthewjfrawley/' },
-  { icon: instagramIcon, alt: 'Instagram', href: 'https://www.instagram.com/prag.matt.ic/' },
   { icon: youtubeIcon, alt: 'YouTube', href: 'https://www.youtube.com/@pragmattic-dev' },
+  { icon: instagramIcon, alt: 'Instagram', href: 'https://www.instagram.com/prag.matt.ic/' },
   { icon: mailIcon, alt: 'Email', href: 'mailto:pragmattic.ltd@gmail.com' },
-  { icon: blogIcon, alt: 'Blog', href: 'https://blog.pragmattic.dev' },
+  // { icon: blogIcon, alt: 'Blog', href: 'https://blog.pragmattic.dev' },
 ] as const
 
 const CODE_URL = 'https://github.com/prag-matt-ic/pragmattic-ps5'
