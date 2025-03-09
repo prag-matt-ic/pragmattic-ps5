@@ -5,7 +5,6 @@ import { Canvas, extend } from '@react-three/fiber'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/dist/SplitText'
 import { type FC, useLayoutEffect, useState } from 'react'
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js'
 import { type WebGPURendererParameters } from 'three/src/renderers/webgpu/WebGPURenderer.js'
 import * as THREE from 'three/webgpu'
 
@@ -27,7 +26,7 @@ const PS5LoadingScene: FC = () => {
   const [isWebGPUSupported, setIsWebGPUSupported] = useState<boolean | null>(null)
 
   useLayoutEffect(() => {
-    setIsWebGPUSupported(WebGPU.isAvailable())
+    setIsWebGPUSupported(!!navigator?.gpu)
   }, [])
 
   if (isWebGPUSupported === null) return null

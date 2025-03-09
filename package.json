@@ -2,7 +2,7 @@
   "name": "pragmattic-ps5",
   "version": "0.1.0",
   "private": true,
-  "author": "Pragmattic",
+  "author": "Pragmattic (Matthew Frawley)",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
