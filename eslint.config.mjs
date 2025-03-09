@@ -19,18 +19,12 @@ const config = [
     plugins: {
       'simple-import-sort': simpleImportSort,
     },
-
     rules: {
       'no-unused-vars': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
       'simple-import-sort/imports': 'warn',
       'simple-import-sort/exports': 'error',
-      'no-console': [
-        'warn',
-        {
-          allow: ['warn', 'error'],
-        },
-      ],
+      'no-console': 'warn',
     },
   },
 ]

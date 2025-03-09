@@ -56,9 +56,9 @@ const PS5Lighting: FC = () => {
       )
       // Get texture nodes
       const scenePassColor = scenePass.getTextureNode('output')
-      // const scenePassEmissive = scenePass.getTextureNode("emissive");
+      const scenePassEmissive = scenePass.getTextureNode('emissive')
       // Create bloom pass
-      const bloomPass = bloom(scenePassColor, 0.3)
+      const bloomPass = bloom(scenePassEmissive, 0.3)
       processing.outputNode = scenePassColor.add(bloomPass)
       postProcessing.current = processing
     }
@@ -70,22 +70,22 @@ const PS5Lighting: FC = () => {
     }
   }, [renderer, scene, camera])
 
-  // useFrame(({ gl }) => {
-  //   if (!postProcessing.current) return;
-  //   gl.clear();
-  //   postProcessing.current.render();
-  // }, 1);
+  useFrame(({ gl }) => {
+    if (!postProcessing.current) return
+    gl.clear()
+    postProcessing.current.render()
+  }, 1)
 
   return (
     <>
       <directionalLight
         ref={light}
         position={[8, 20, 0]}
-        intensity={16}
+        intensity={18}
         castShadow={true}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        color={'#AE9F9D'}
+        color="#AE9F9D"
       />
     </>
   )

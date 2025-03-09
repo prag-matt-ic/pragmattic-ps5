@@ -2,7 +2,8 @@
 import { offset, useClick, useDismiss, useFloating, useInteractions } from '@floating-ui/react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import Image from 'next/image'
+import SplitText from 'gsap/dist/SplitText'
+import Image, { StaticImageData } from 'next/image'
 import React, { type FC, useRef, useState } from 'react'
 import { SwitchTransition, Transition, TransitionStatus } from 'react-transition-group'
 
@@ -11,17 +12,27 @@ import avatarImg from '@/assets/avatar.jpg'
 import optionsIcon from '@/assets/options.svg'
 import brandIcon from '@/assets/p-brand.svg'
 import restartIcon from '@/assets/restart.svg'
-
+import blogIcon from '@/assets/socials/article.svg'
+import instagramIcon from '@/assets/socials/instagram.svg'
+import linkedinIcon from '@/assets/socials/linkedin.svg'
+import mailIcon from '@/assets/socials/mail.svg'
+import youtubeIcon from '@/assets/socials/youtube.svg'
 import usePS5Store, { Stage } from '@/hooks/usePS5Store'
-import SplitText from 'gsap/dist/SplitText'
 
-const PS5UI: FC = () => {
+gsap.registerPlugin(useGSAP, SplitText)
+
+const UI: FC = () => {
   const stage = usePS5Store((s) => s.stage)
   const wrapper = useRef<HTMLDivElement>(null)
 
   return (
     <SwitchTransition mode="in-out">
-      <Transition key={stage} timeout={{ enter: 0, exit: 1000 }} nodeRef={wrapper}>
+      <Transition
+        key={stage}
+        timeout={{ enter: 0, exit: 800 }}
+        nodeRef={wrapper}
+        mountOnEnter={true}
+        unmountOnExit={true}>
         {(transitionStatus) => {
           return (
             <div ref={wrapper} className="fixed inset-0 flex items-center justify-center">
@@ -35,7 +46,7 @@ const PS5UI: FC = () => {
   )
 }
 
-export default PS5UI
+export default UI
 
 type Props = {
   transitionStatus: TransitionStatus
@@ -51,25 +62,27 @@ const PulsingBrand: FC<Props> = ({ transitionStatus }) => {
       if (transitionStatus === 'entered') {
         const circles: HTMLDivElement[] = gsap.utils.toArray('.circle-pulse')
         // Mapped rather than using selector so that the delay and duration can be set per circle.
-        circleTweens.current = circles.map((circle, index) => {
-          return gsap.to(circle, {
-            keyframes: {
-              '0%': { opacity: 0, scale: 1, ease: 'none' },
-              '25%': { opacity: 0.3, scale: 1.25, ease: 'none' },
-              '75%': { opacity: 1, scale: 1.75, ease: 'none' },
-              '100%': { opacity: 0, scale: 2, ease: 'none' },
-            },
-            duration: 1.5,
-            repeat: -1,
-            repeatDelay: 0.5,
-            delay: index / 1.5,
+        const animateCircles = () => {
+          circleTweens.current = circles.map((circle, index) => {
+            return gsap.to(circle, {
+              keyframes: {
+                '0%': { opacity: 0, scale: 1, ease: 'none' },
+                '25%': { opacity: 0.3, scale: 1.25, ease: 'none' },
+                '75%': { opacity: 1, scale: 1.75, ease: 'none' },
+                '100%': { opacity: 0, scale: 2, ease: 'none' },
+              },
+              duration: 1.5,
+              repeat: -1,
+              repeatDelay: 0.5,
+              delay: index / 1.5,
+            })
           })
-        })
-        // Fade in the container
+        }
+        // Fade in the container and then start the circle animations
         gsap.fromTo(
           container.current,
           { opacity: 0, scale: 0.6 },
-          { opacity: 1, duration: 0.5, scale: 1, ease: 'power1.in' },
+          { opacity: 1, duration: 0.5, scale: 1, delay: 1, ease: 'power1.in', onComplete: animateCircles },
         )
       }
       if (transitionStatus === 'exiting') {
@@ -77,10 +90,10 @@ const PulsingBrand: FC<Props> = ({ transitionStatus }) => {
           .timeline()
           // First fade out the button and label
           .to(['button', 'span'], { opacity: 0, duration: 0.3 })
-          // Then the container (circles)
+          // Then the container (inc. circles)
           .to(container.current, {
             opacity: 0,
-            duration: 0.4,
+            duration: 0.3,
             onComplete: () => {
               circleTweens.current.forEach((tween) => tween.kill())
             },
@@ -123,21 +136,22 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
   useGSAP(
     () => {
       if (transitionStatus === 'entering') {
-        // Split the heading text (wrap in <divs> with classname)
+        // Split the heading text (wrap in <div>) so characters can be animated in
         const splitHeading = new SplitText('h1', {
           charsClass: 'opacity-0 blur-sm',
         })
+
         gsap
           .timeline()
-          // Transition the avatar circle from the brand logo scale to the full size
+          // Transition the primary avatar circle from the brand logo scale to the full size
           .fromTo(
             '#avatar-circle',
             { opacity: 0, scale: 0.3 },
             { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' },
           )
-          // then bring the avatar image in
+          // // then bring the avatar image in
           .to('#avatar-img', { opacity: 1, duration: 0.4, ease: 'power2.in' }, 0.4)
-          // followed by the secondary column and then header
+          // followed by the secondary column
           .fromTo(
             '#see',
             { opacity: 0, scale: 0.7, xPercent: 16 },
@@ -150,9 +164,6 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             },
             '-=0.15',
           )
-          // Header is initially hidden to prevent flash of content before split text is run
-          // So we show it before animating the characters in...
-          .set('header', { opacity: 1 })
           // Then we animate the H1 characters in
           .fromTo(
             splitHeading.chars,
@@ -163,25 +174,21 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
                 { opacity: 1, filter: 'blur(0px)', ease: 'power1.out' },
               ],
               duration: 0.6,
-              stagger: 0.024,
+              stagger: 0.032,
               ease: 'power2.out',
             },
-            0,
           )
           // Before the about paragraph
           .fromTo(
             '#about',
             {
               opacity: 0,
-              y: 8,
             },
             {
               opacity: 1,
-              y: 0,
-              duration: 0.5,
+              duration: 1,
               ease: 'power2.out',
             },
-            0.5,
           )
       }
 
@@ -206,7 +213,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
     transform: false,
     open: showContactMenu,
     onOpenChange: setShowContactMenu,
-    middleware: [offset(12)],
+    middleware: [offset(16)],
   })
 
   const click = useClick(context, { toggle: true })
@@ -229,7 +236,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
     <section
       ref={container}
       className="absolute grid h-full grid-cols-3 grid-rows-3 place-content-center gap-x-6 gap-y-3">
-      <header className="col-span-3 flex flex-col items-center justify-center gap-4 text-center opacity-0">
+      <header className="col-span-3 flex flex-col items-center justify-center gap-4 text-center">
         <h1 className="text-4xl font-medium tracking-tight">PS5 Landing Experience</h1>
         <p id="about" className="max-w-xl leading-relaxed font-light text-white/80">
           This project was inspired by the PS5 loading screen, and is built using React (Next.js), Three.js (R3F), GSAP
@@ -238,13 +245,13 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
         </p>
       </header>
 
-      {/* See how its done column */}
+      {/* "See the code" column */}
       <div id="see" className="row-span-2 grid grid-rows-subgrid">
         <a
           href={CODE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex size-48 cursor-pointer items-center justify-center place-self-center rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20">
+          className="group flex size-48 cursor-pointer items-center justify-center place-self-center rounded-full bg-white/10 hover:bg-white/20">
           <Image
             src={arrowOutIcon}
             alt="add"
@@ -267,7 +274,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             id="avatar-img"
             alt="Matthew Frawley"
             className="rounded-full opacity-0"
-            quality={85}
+            quality={80}
             priority={true}
           />
         </div>
@@ -278,7 +285,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
             <button
               ref={refs.setReference}
               {...getReferenceProps()}
-              className="group mx-auto flex cursor-pointer items-center gap-2">
+              className="group mx-auto flex cursor-pointer items-center gap-2 select-none">
               <Image src={optionsIcon} alt="options" className="h-5 w-fit" />
               <span className="text-left text-sm font-light text-white/80 group-hover:text-white">Options</span>
             </button>
@@ -297,8 +304,12 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
                 style={floatingStyles}
                 {...getFloatingProps()}
                 id="contact-menu"
-                className="fixed z-50 rounded-lg bg-white p-6 opacity-0">
-                <h3>Contact Matt</h3>
+                className="fixed z-50 flex flex-wrap gap-4 rounded-lg bg-white p-4 opacity-0 shadow-2xl">
+                {SOCIALS.map((social, index) => (
+                  <a key={index} href={social.href} target="_blank" rel="noopener noreferrer p-1">
+                    <Image src={social.icon} alt={social.alt} className="size-10" />
+                  </a>
+                ))}
               </div>
             </Transition>
           </div>
@@ -313,5 +324,17 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
     </section>
   )
 }
+
+const SOCIALS: {
+  icon: StaticImageData
+  alt: string
+  href: string
+}[] = [
+  { icon: linkedinIcon, alt: 'LinkedIn', href: 'https://www.linkedin.com/in/matthewjfrawley/' },
+  { icon: instagramIcon, alt: 'Instagram', href: 'https://www.instagram.com/prag.matt.ic/' },
+  { icon: youtubeIcon, alt: 'YouTube', href: 'https://www.youtube.com/@pragmattic-dev' },
+  { icon: mailIcon, alt: 'Email', href: 'mailto:pragmattic.ltd@gmail.com' },
+  { icon: blogIcon, alt: 'Blog', href: 'https://blog.pragmattic.dev' },
+] as const
 
 const CODE_URL = ''
