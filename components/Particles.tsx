@@ -29,6 +29,7 @@ import {
   positionWorld,
   select,
   sin,
+  step,
   time,
   uniform,
   uv,
@@ -42,22 +43,22 @@ import usePS5Store, { Stage } from '../hooks/usePS5Store'
 
 // Work on re-creating the PS5 Loading screen: https://www.youtube.com/watch?v=bMxgJbCgPQQ
 
-const colourCount = 100
+const COLOUR_COUNT = 100
 
 const rangeColors = [
   ...colorsFromRange('soft', {
     base: 'sienna',
-    num: colourCount * 0.1,
+    num: COLOUR_COUNT * 0.1,
     variance: 0.05,
   }),
   ...colorsFromRange('neutral', {
     base: 'tan',
-    num: colourCount * 0.7,
+    num: COLOUR_COUNT * 0.7,
     variance: 0.02,
   }),
   ...colorsFromRange('dark', {
     base: 'darkgrey',
-    num: colourCount * 0.2,
+    num: COLOUR_COUNT * 0.2,
     variance: 0.5,
   }),
 ]
@@ -74,12 +75,11 @@ const particleCount = Math.pow(64, 2)
 
 const PS5Particles: FC = () => {
   const renderer = useThree((s) => s.gl) as unknown as WebGPURenderer
-  const viewport = useThree((s) => s.viewport)
+  // const viewport = useThree((s) => s.viewport)
+  // console.log("viewport", viewport.width, viewport.width / particleCount);
 
   const stage = usePS5Store((s) => s.stage)
   const setStage = usePS5Store((s) => s.setStage)
-
-  // console.log("viewport", viewport.width, viewport.width / particleCount);
 
   const { key, positionNode, colorNode, scaleNode, opacityNode, updatePositions, uEnterValue } = useMemo(() => {
     // Create storage buffers for positions (w holds random seed) and velocities.
@@ -121,7 +121,7 @@ const PS5Particles: FC = () => {
       // Calculation final position
       const position = finalPositionBuffer.element(instanceIndex)
       // Use the instanceIndex to compute a parameter "t"
-      // Multiply by a spacing factor (0.1 here) to spread out the points
+      // Multiply by a spacing factor (0.1 here) to spread out the points along the x-axis
       const t = float(instanceIndex.add(3)).mul(xSpacing)
 
       const noiseInputA = hash(instanceIndex.toVar().mul(10))
@@ -140,7 +140,7 @@ const PS5Particles: FC = () => {
       // You can leave z at 0 if you want a 2D sine wave.
       const wavePos = vec3(x, y, z).toVar()
 
-      // Randomly leave some of the particles at their initial position
+      // Randomly scatter some of the particles
       const makeMoreRandom = seed.lessThan(0.3)
       const randomPos = vec3(0.0, noiseA.sub(noiseB).mul(24), 0.0).add(wavePos)
 
@@ -148,10 +148,10 @@ const PS5Particles: FC = () => {
 
       position.assign(finalPosition)
 
-      // Initiate Colour
+      // Initiate a random colour
       const c = colorBuffer.element(instanceIndex)
-      const colorIndex = hash(instanceIndex.add(3)).mul(colourCount).floor()
-      const randomColor = select(seed.greaterThan(0.98), color('#BBBCB5'), colors.element(colorIndex))
+      const colorIndex = hash(instanceIndex.add(3)).mul(COLOUR_COUNT).floor()
+      const randomColor = select(seed.greaterThan(0.99), color('#BBBCB5'), colors.element(colorIndex))
 
       c.assign(randomColor)
     })().compute(particleCount)
@@ -164,8 +164,13 @@ const PS5Particles: FC = () => {
       const finalPosition = finalPositionBuffer.toAttribute()
       // @ts-expect-error no type for this
       const initialPosition = initialPositionBuffer.toAttribute()
-      const position = mix(initialPosition, finalPosition, uEnterValue)
-      return position
+      const result = finalPosition.toVar()
+
+      If(uEnterValue.lessThan(1.0), () => {
+        result.assign(mix(initialPosition, finalPosition, uEnterValue))
+      })
+
+      return result
     })()
 
     const colorNode = Fn(() => {
@@ -181,7 +186,7 @@ const PS5Particles: FC = () => {
         posZ.lessThan(0.0),
         // Invert the mapping: at posZ = -5, smoothstep(-5,0,-5) returns 0, so 1 - 0 = 1 (fully soft);
         // at posZ = 0, smoothstep(-5,0,0) returns 1, so 1 - 1 = 0 (sharp)
-        smoothstep(-5.0, 0.0, posZ).oneMinus(),
+        smoothstep(-3.0, 0.0, posZ).oneMinus(),
         select(
           posZ.greaterThan(1.0),
           // For Z from 1 (sharp) to 5 (soft)
@@ -191,7 +196,7 @@ const PS5Particles: FC = () => {
         ),
       )
       // Define a sharp circle: a narrow transition (e.g., from 0.45 to 0.5)
-      const sharpCircle = smoothstep(0.49, 0.5, centeredUv).oneMinus()
+      const sharpCircle = step(0.5, centeredUv).oneMinus()
       // Define a soft circle: a wider transition (e.g., from 0.25 to 0.5)
       const softCircle = smoothstep(0.0, 0.5, centeredUv).oneMinus()
       // Blend between the two based on the softness factor

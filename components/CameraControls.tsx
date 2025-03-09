@@ -22,30 +22,7 @@ const PS5CameraControls: FC = () => {
 
   useEffect(() => {
     if (!cameraControls.current) return
-
-    if (debouncedSize.width < 480) {
-      cameraControls.current.setLookAt(
-        0,
-        0,
-        10, // New camera position
-        0,
-        0,
-        0, // Target position
-        false, // Do not use transition (or set true for smooth transition)
-      )
-      // Don't do pointer on mobile
-      return
-    }
-
-    cameraControls.current.setLookAt(
-      0,
-      0,
-      8, // New camera position
-      0,
-      0,
-      0, // Target position
-      false, // Do not use transition (or set true for smooth transition)
-    )
+    if (debouncedSize.width < 480) return
 
     const onPointerMove = (e: PointerEvent) => {
       const normalizedY = e.clientY / debouncedSize.width

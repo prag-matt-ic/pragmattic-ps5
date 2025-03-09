@@ -239,7 +239,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
       <header className="col-span-3 flex flex-col items-center justify-center gap-4 text-center">
         <h1 className="text-4xl font-medium tracking-tight">PS5 Landing Experience with WebGPU</h1>
         <p id="about" className="max-w-xl leading-relaxed font-light text-white/80">
-          This project was inspired by the PS5 loading screen, and is built with Next.js, Three.js (R3F), GSAP and
+          This project was inspired by the PS5 loading screen, and is built with Next.js, React Three Fiber, GSAP and
           TailwindCSS. All of the shader/GPU logic for the particles is written entirely in Typescript using Three.js
           Shading Language.
         </p>
@@ -251,7 +251,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
           href={CODE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex size-48 cursor-pointer items-center justify-center place-self-center rounded-full bg-white/10 hover:bg-white/20">
+          className="group flex size-48 cursor-pointer items-center justify-center place-self-center rounded-full bg-white/10 transition-colors hover:bg-white/20">
           <Image
             src={arrowOutIcon}
             alt="add"
