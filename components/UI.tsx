@@ -337,4 +337,4 @@ const SOCIALS: {
   { icon: blogIcon, alt: 'Blog', href: 'https://blog.pragmattic.dev' },
 ] as const
 
-const CODE_URL = ''
+const CODE_URL = 'https://github.com/prag-matt-ic/pragmattic-ps5'
