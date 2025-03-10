@@ -53,7 +53,7 @@ const PALETTE = [
   ...colorsFromRange('neutral', {
     base: 'tan',
     num: COLOUR_COUNT * 0.7,
-    variance: 0.02,
+    variance: 0.03,
   }),
 ]
 
@@ -146,7 +146,7 @@ const PS5Particles: FC = () => {
       const softness = select(
         posZ.lessThan(0.0),
         smoothstep(-zRange / 2, 0.0, posZ).oneMinus(),
-        select(posZ.greaterThan(0.5), smoothstep(0.5, 3.0, posZ), 0.0),
+        select(posZ.greaterThan(0.5), smoothstep(0.5, 2.5, posZ), 0.0),
       )
       const sharpCircle = step(0.5, centeredUv).oneMinus()
       const softCircle = smoothstep(0.0, 0.5, centeredUv).oneMinus()
@@ -172,7 +172,7 @@ const PS5Particles: FC = () => {
       const distanceOpacity = select(
         posZ.lessThan(1.0),
         smoothstep(-zRange / 2, 1.0, posZ).oneMinus(),
-        select(posZ.greaterThan(1.0), smoothstep(1.0, 8.0, posZ), 0.0),
+        select(posZ.greaterThan(1.0), smoothstep(1.0, 7.0, posZ), 0.0),
       ).oneMinus()
 
       const finalOpacity = flickerAlpha.mul(enterOpacity).mul(distanceOpacity)
@@ -187,7 +187,13 @@ const PS5Particles: FC = () => {
         vec2(3.5),
         select(seed.lessThan(0.05), vec2(1.5), vec2(mix(0.5, 2.0, seed))),
       )
-      return scale
+      // Add custom size attenuation based on the Z position
+      const posZ = positionWorld.z
+      const attenuation = smoothstep(-zRange / 2, zRange / 2, posZ)
+        .clamp(0.3, 1.0)
+        .mul(2)
+
+      return scale.mul(attenuation)
     })()
 
     const key = colorNode.uuid
@@ -232,7 +238,7 @@ const PS5Particles: FC = () => {
       if (stage !== Stage.ENTER) return
       gsap.to(uEnterValue, {
         value: 1.0,
-        duration: 3,
+        duration: 2.6,
         ease: 'power2.inOut',
         onComplete: () => {
           setStage(Stage.BRAND)

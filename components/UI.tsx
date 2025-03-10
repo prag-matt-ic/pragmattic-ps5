@@ -104,7 +104,7 @@ const PulsingBrand: FC<Props> = ({ transitionStatus }) => {
       {Array.from({ length: 3 }).map((_, index) => (
         <div
           key={index}
-          className="circle-pulse absolute aspect-square size-24 rounded-full border-[1.5px] border-white opacity-0"
+          className="circle-pulse absolute aspect-square size-24 rounded-full border-2 border-white opacity-0"
           style={{
             boxShadow: '0 0 6px 2px rgba(255, 255, 255, 0.25), inset 0 0 6px 2px rgba(255, 255, 255, 0.2)',
           }}
@@ -259,7 +259,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
       <div className="relative row-span-2 grid grid-rows-subgrid">
         <div
           id="avatar-circle"
-          className="aspect-square size-56 place-self-center rounded-full border-[1.5px] border-white p-2.5 opacity-0 sm:size-72"
+          className="aspect-square size-56 place-self-center rounded-full border-2 border-white p-2.5 opacity-0 sm:size-72"
           style={{
             boxShadow: '0 0 6px 2px rgba(255, 255, 255, 0.25), inset 0 0 6px 2px rgba(255, 255, 255, 0.2)',
           }}>
@@ -280,7 +280,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
               {...getReferenceProps()}
               className="group mx-auto flex cursor-pointer items-center gap-2 p-1 select-none">
               <Image src={optionsIcon} alt="options" className="h-5 w-fit" />
-              <span className="text-left text-sm font-light text-white/80 group-hover:text-white">Options</span>
+              <span className="text-left text-sm text-white/80 group-hover:text-white">Options</span>
             </button>
 
             {/* Contact options */}
