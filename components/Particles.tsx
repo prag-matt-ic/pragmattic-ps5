@@ -60,7 +60,7 @@ const PALETTE = [
 
 const colors = array(PALETTE.map((c) => color(css(c))))
 
-const particleCount = Math.pow(64, 2)
+const particleCount = Math.pow(60, 2)
 
 const PS5Particles: FC = () => {
   const renderer = useThree((s) => s.gl) as unknown as WebGPURenderer
@@ -118,7 +118,7 @@ const PS5Particles: FC = () => {
 
       // Compute initial position based on the final position
       const initialPosition = initialPositionBuffer.element(instanceIndex)
-      const initialPos = finalPos.add(vec3(s.mul(4), s.mul(6), s.mul(12)))
+      const initialPos = finalPos.add(vec3(s.mul(6), s.mul(8), s.mul(12)))
       initialPosition.assign(initialPos)
 
       // Initialize the current position to the initial position
@@ -153,14 +153,12 @@ const PS5Particles: FC = () => {
       const softCircle = smoothstep(0.0, 0.5, centeredUv).oneMinus()
       const circle = mix(sharpCircle, softCircle, softness)
       const c = colorBuffer.element(instanceIndex)
-
       return vec4(c, circle)
     })()
 
     const opacityNode = Fn(() => {
       const seed = seedBuffer.element(instanceIndex)
       const offset = hash(seed)
-
       // Create a flickering effect by cycling the particles' opacity
       const period = float(mix(1.0, 8.0, seed))
       const tCycle = float(mod(time.add(offset.mul(period)), period))
@@ -168,16 +166,14 @@ const PS5Particles: FC = () => {
       const flickerIn = smoothstep(0.0, flickerDuration, tCycle)
       const flickerOut = smoothstep(period.sub(flickerDuration), period, tCycle).oneMinus()
       const flickerAlpha = flickerIn.mul(flickerOut)
-
       // Fade in as entering
       const enterOpacity = clamp(uEnterValue, 0.4, 1.0)
-
       // Fade particles out near and far from the camera
       const posZ = positionWorld.z
       const distanceOpacity = select(
         posZ.lessThan(0.0),
         smoothstep(-zRange / 2, 0.0, posZ).oneMinus(),
-        select(posZ.greaterThan(1.0), smoothstep(1.0, zRange / 2, posZ), 0.0),
+        select(posZ.greaterThan(1.0), smoothstep(1.0, 8.0, posZ), 0.0),
       ).oneMinus()
 
       const finalOpacity = flickerAlpha.mul(enterOpacity).mul(distanceOpacity)
@@ -189,8 +185,8 @@ const PS5Particles: FC = () => {
       const seed = seedBuffer.element(instanceIndex)
       const scale = select(
         seed.greaterThan(0.98),
-        vec2(3.2),
-        select(seed.lessThan(0.05), vec2(1.0), vec2(mix(0.3, 2.5, seed))),
+        vec2(3.5),
+        select(seed.lessThan(0.05), vec2(1.5), vec2(mix(0.5, 2.0, seed))),
       )
       return scale
     })()
@@ -209,8 +205,8 @@ const PS5Particles: FC = () => {
 
       // Animate the final position so the particles float around.
       const s = seed.mul(2.0).sub(1) // convert seed to a value between -1 and 1
-      const velX = mx_noise_float(t).mul(s).mul(0.005)
-      const velY = mx_noise_float(sin(s.mul(t))).mul(0.005)
+      const velX = mx_noise_float(t).mul(s).mul(0.01)
+      const velY = sin(s.add(t)).mul(0.005)
       const velZ = mx_noise_float(finalPosition.add(1)).mul(0.01)
       finalPosition.addAssign(vec3(velX, velY, velZ))
 

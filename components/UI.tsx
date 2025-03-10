@@ -118,9 +118,7 @@ const PulsingBrand: FC<Props> = ({ transitionStatus }) => {
         <Image src={brandIcon} alt="Pragmattic" className="size-24" />
       </button>
 
-      <span className="absolute -bottom-24 text-center text-sm font-light text-white/80 select-none">
-        Press to enter
-      </span>
+      <span className="absolute -bottom-24 text-center text-sm text-white/80 select-none">Press to enter</span>
     </div>
   )
 }
