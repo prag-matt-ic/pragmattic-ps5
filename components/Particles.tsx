@@ -146,7 +146,7 @@ const PS5Particles: FC = () => {
       const softness = select(
         posZ.lessThan(0.0),
         smoothstep(-zRange / 2, 0.0, posZ).oneMinus(),
-        select(posZ.greaterThan(1.0), smoothstep(1.0, 3.0, posZ), 0.0),
+        select(posZ.greaterThan(0.5), smoothstep(0.5, 3.0, posZ), 0.0),
       )
       const sharpCircle = step(0.5, centeredUv).oneMinus()
       const softCircle = smoothstep(0.0, 0.5, centeredUv).oneMinus()
@@ -170,8 +170,8 @@ const PS5Particles: FC = () => {
       // Fade particles out near and far from the camera
       const posZ = positionWorld.z
       const distanceOpacity = select(
-        posZ.lessThan(0.0),
-        smoothstep(-zRange / 2, 0.0, posZ).oneMinus(),
+        posZ.lessThan(1.0),
+        smoothstep(-zRange / 2, 1.0, posZ).oneMinus(),
         select(posZ.greaterThan(1.0), smoothstep(1.0, 8.0, posZ), 0.0),
       ).oneMinus()
 
