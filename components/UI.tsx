@@ -230,9 +230,9 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
     <section
       ref={container}
       className="absolute grid h-full grid-cols-3 grid-rows-3 place-content-center gap-x-6 gap-y-3">
-      <header className="col-span-3 flex flex-col items-center justify-center gap-4 text-center">
-        <h1 className="text-4xl font-medium tracking-tight">PS5 Landing Experience with WebGPU</h1>
-        <p id="about" className="max-w-xl leading-relaxed font-light text-white/80">
+      <header className="col-span-3 flex flex-col items-center justify-center gap-4 px-4 text-center">
+        <h1 className="text-xl font-medium tracking-tight sm:text-4xl">PS5 Landing Experience with WebGPU</h1>
+        <p id="about" className="max-w-xl text-xs leading-relaxed font-light text-white/80 sm:text-base">
           This project was inspired by the PS5 loading screen, and is built with Next.js, React Three Fiber, GSAP and
           TailwindCSS. All of the shader/GPU logic for the particles is written entirely in Typescript using Three.js
           Shading Language.
@@ -245,21 +245,21 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
           href={CODE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex size-48 cursor-pointer items-center justify-center place-self-center rounded-full bg-white/10 transition-colors hover:bg-white/20">
+          className="group flex size-24 cursor-pointer items-center justify-center place-self-center rounded-full bg-white/10 transition-colors hover:bg-white/20 sm:size-48">
           <Image
             src={arrowOutIcon}
             alt="add"
             className="size-14 transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
           />
         </a>
-        <h3 className="mt-2 text-center text-2xl font-light tracking-tight">See the code</h3>
+        <h3 className="mt-2 text-center font-light tracking-tight sm:text-2xl">See the code</h3>
       </div>
 
       {/* Profile column */}
       <div className="relative row-span-2 grid grid-rows-subgrid">
         <div
           id="avatar-circle"
-          className="aspect-square size-72 place-self-center rounded-full border-[1.5px] border-white p-2.5 opacity-0"
+          className="aspect-square size-56 place-self-center rounded-full border-[1.5px] border-white p-2.5 opacity-0 sm:size-72"
           style={{
             boxShadow: '0 0 6px 2px rgba(255, 255, 255, 0.25), inset 0 0 6px 2px rgba(255, 255, 255, 0.2)',
           }}>
@@ -274,7 +274,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
 
         <div className="flex w-full flex-col items-center justify-between pb-8">
           <div className="space-y-3">
-            <h3 className="mt-2 text-center text-2xl font-light tracking-tight">Matthew Frawley</h3>
+            <h3 className="mt-2 text-center font-light tracking-tight sm:text-2xl">Matthew Frawley</h3>
             <button
               ref={refs.setReference}
               {...getReferenceProps()}
@@ -297,7 +297,7 @@ const Avatars: FC<Props> = ({ transitionStatus }) => {
                 style={floatingStyles}
                 {...getFloatingProps()}
                 id="contact-menu"
-                className="bg-darkblue/80 fixed z-50 flex flex-wrap gap-4 rounded-lg p-4 opacity-0">
+                className="bg-darkblue fixed z-50 flex flex-wrap gap-4 rounded-lg p-4 opacity-0">
                 {SOCIALS.map((social, index) => (
                   <a key={index} href={social.href} target="_blank" rel="noopener noreferrer p-2">
                     <Image src={social.icon} alt={social.alt} className="size-8" />

@@ -47,7 +47,7 @@ const PS5LoadingScene: FC = () => {
 
   return (
     <Canvas
-      className="!fixed inset-0"
+      className="!fixed inset-0 !h-lvh !w-full"
       camera={{ position: [0, 0, 8], fov: 110 }}
       performance={{ min: 0.3, debounce: 300 }}
       gl={async (props) => {
