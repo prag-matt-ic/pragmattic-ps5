@@ -59,8 +59,8 @@ const Scene: FC = () => {
       <Lighting />
       <Backdrop />
       <Particles />
-      {/* <OrbitControls /> */}
-      <CameraControls />
+      <OrbitControls />
+      {/* <CameraControls /> */}
       {process.env.NODE_ENV === 'development' && <Stats />}
     </Canvas>
   )

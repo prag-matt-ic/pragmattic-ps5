@@ -128,7 +128,8 @@ const Particles: FC = () => {
 
       // Initialize current position to the initial position
       const currentPosition = currentPositionBuffer.element(instanceIndex)
-      currentPosition.assign(initialPos)
+      // currentPosition.assign(initialPos)
+      currentPosition.assign(finalPos)
     })().compute(PARTICLE_COUNT)
 
     const computeColor = Fn(() => {
@@ -272,7 +273,7 @@ const Particles: FC = () => {
   )
 
   useFrame(() => {
-    renderer.compute(updatePositions)
+    // renderer.compute(updatePositions)
   })
 
   return (
@@ -285,10 +286,10 @@ const Particles: FC = () => {
       <spriteNodeMaterial
         key={key}
         positionNode={positionNode}
-        colorNode={colorNode}
+        // colorNode={colorNode}
         scaleNode={scaleNode}
-        opacityNode={opacityNode}
-        blending={AdditiveBlending}
+        // opacityNode={opacityNode}
+        // blending={AdditiveBlending}
         depthWrite={false}
         transparent={true}
       />

@@ -14,7 +14,7 @@ type Store = {
 }
 
 const useStageStore = create<Store>((set) => ({
-  stage: Stage.PREFERENCES,
+  stage: Stage.ENTER,
   setStage: (stage) => set({ stage }),
 }))
 
